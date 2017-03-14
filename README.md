@@ -8,11 +8,11 @@ This demo contains examples of the following:
   [cave-story-md's Makefile](https://github.com/andwn/cave-story-md/blob/master/Makefile))
 - [x] A dud `CMakeLists.txt` to make autocomplete work in cmake-based IDEs like CLion
 - [x] Dynamic allocation of structs
-- [x] Rectangle draw of a rescomp-generated tilemap
-- [x] Animated sprites using a rescomp-generated tilemap
+- [x] A scrolling background
+- [x] Animated sprites
 - [x] XGM background music
-- [x] Input
-- [x] Sound samples
+- [x] D-pad input
+- [x] Initializing a sound sample and playing it, cycling through PCM channels
 
 
 ## Build instructions

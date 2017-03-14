@@ -100,15 +100,21 @@ void inputHandler(u16 joy, u16 changed, u16 state) {
     if (joy == JOY_1) controllerState = state;
 }
 
+s16 frame = 0;
+
 int main() {
+    VDP_setPlanSize(32, 32);
+
     VDP_drawText("Hello world!", 10, 13);
     SPR_init(0, 0, 0);
 
-    // Sup
+    // Tiled background
     VDP_setPalette(PAL0, PAL_Sup.data);
     VDP_loadTileSet(&sup, TILE_USERINDEX, TRUE);
-    VDP_fillTileMapRectInc(PLAN_B, TILE_ATTR_FULL(PAL0, 0, 0, 0, TILE_USERINDEX),
-                           0, 0, 16, 16);
+    for (u16 i = 0; i < 4; i++) {
+        VDP_fillTileMapRectInc(PLAN_B, TILE_ATTR_FULL(PAL0, 0, 0, 0, TILE_USERINDEX),
+                               i%2 * 16, i/2 * 16, 16, 16);
+    }
     VDP_setBackgroundColor(32);
 
     setRandomSeed(1);
@@ -128,6 +134,8 @@ int main() {
 
     fix16 forceX, forceY;
     while(1) {
+        frame += 1;
+
         forceX = forceY = 0;
         if (controllerState & BUTTON_LEFT) forceX -= FORCE;
         if (controllerState & BUTTON_RIGHT) forceX += FORCE;
@@ -138,6 +146,10 @@ int main() {
             Bubble_force(bubbleSprites[i], forceX, forceY);
             Bubble_update(bubbleSprites[i]);
         }
+
+        VDP_setHorizontalScroll(PLAN_B, frame*2);
+        VDP_setVerticalScroll(PLAN_B, -frame/2);
+
         SPR_update();
         VDP_waitVSync();
     }
