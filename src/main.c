@@ -80,8 +80,8 @@ int main() {
     setRandomSeed(1);
     AngusSprite* angusSprites[NUM_SPRITES];
     for (int i = 0; i < NUM_SPRITES; i++) {
-        angusSprites[i] = Angus_new(FIX16(VDP_getScreenWidth()/2),
-                                    FIX16(VDP_getScreenHeight()/2));
+        angusSprites[i] = Angus_new(FIX16(VDP_getScreenWidth()/2 - 128 + (random() & 0x00FF)),
+                                    FIX16(VDP_getScreenHeight()/2 - 128 + (random() & 0x00FF)));
 
     }
 
