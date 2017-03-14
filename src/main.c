@@ -16,19 +16,19 @@ typedef struct
     fix16 y;
     fix16 velX;
     fix16 velY;
-} AngusSprite;
+} BubbleSprite;
 
-AngusSprite* Angus_new(fix16 x, fix16 y) {
-    fix16 centerX = x - FIX16(SPRITE_WIDTH(angus)/2);
-    fix16 centerY = y - FIX16(SPRITE_HEIGHT(angus)/2);
+BubbleSprite* Bubble_new(fix16 x, fix16 y) {
+    fix16 centerX = x - FIX16(SPRITE_WIDTH(bubble)/2);
+    fix16 centerY = y - FIX16(SPRITE_HEIGHT(bubble)/2);
 
-    VDP_setPalette(PAL1, PAL_Angus.data);
-    Sprite* spr = SPR_addSprite(&angus,
+    VDP_setPalette(PAL1, PAL_Bubble.data);
+    Sprite* spr = SPR_addSprite(&bubble,
                                 fix16ToRoundedInt(centerX), fix16ToRoundedInt(centerY),
                                 TILE_ATTR(PAL1, 0, 0, 0));
 
-    AngusSprite* angusSprite = MEM_alloc(sizeof(AngusSprite));
-    *angusSprite = (AngusSprite){
+    BubbleSprite* bubbleSprite = MEM_alloc(sizeof(BubbleSprite));
+    *bubbleSprite = (BubbleSprite){
             .sprite=spr,
             .x = centerX,
             .y = centerY,
@@ -36,38 +36,38 @@ AngusSprite* Angus_new(fix16 x, fix16 y) {
             .velY=-32 + (random() & 0x003f)
     };
 
-    return angusSprite;
+    return bubbleSprite;
 }
 
-void Angus_update(AngusSprite* angusSprite) {
-    angusSprite->x += angusSprite->velX;
-    angusSprite->y += angusSprite->velY;
+void Bubble_update(BubbleSprite* bubbleSprite) {
+    bubbleSprite->x += bubbleSprite->velX;
+    bubbleSprite->y += bubbleSprite->velY;
 
-    fix16 width = FIX16(SPRITE_WIDTH(angus));
-    fix16 height = FIX16(SPRITE_HEIGHT(angus));
-    fix16 right = angusSprite->x + width;
-    fix16 bottom = angusSprite->y + height;
+    fix16 width = FIX16(SPRITE_WIDTH(bubble));
+    fix16 height = FIX16(SPRITE_HEIGHT(bubble));
+    fix16 right = bubbleSprite->x + width;
+    fix16 bottom = bubbleSprite->y + height;
     fix16 screenRight = FIX16(VDP_getScreenWidth());
     fix16 screenBottom = FIX16(VDP_getScreenHeight());
 
     s8 bump = FALSE;
-    if (angusSprite->x < 0) {
+    if (bubbleSprite->x < 0) {
         bump = TRUE;
-        angusSprite->x *= -1;
-        angusSprite->velX *= -1;
+        bubbleSprite->x *= -1;
+        bubbleSprite->velX *= -1;
     } else if (right > screenRight) {
         bump = TRUE;
-        angusSprite->x = screenRight - width - (right - screenRight);
-        angusSprite->velX *= -1;
+        bubbleSprite->x = screenRight - width - (right - screenRight);
+        bubbleSprite->velX *= -1;
     }
-    if (angusSprite->y < 0) {
+    if (bubbleSprite->y < 0) {
         bump = TRUE;
-        angusSprite->y *= -1;
-        angusSprite->velY *= -1;
+        bubbleSprite->y *= -1;
+        bubbleSprite->velY *= -1;
     } else if (bottom > screenBottom) {
         bump = TRUE;
-        angusSprite->y = screenBottom - height - (bottom - screenBottom);
-        angusSprite->velY *= -1;
+        bubbleSprite->y = screenBottom - height - (bottom - screenBottom);
+        bubbleSprite->velY *= -1;
     }
 
     if (bump) {
@@ -75,14 +75,14 @@ void Angus_update(AngusSprite* angusSprite) {
         if (soundChannel > 3) soundChannel = 1;
     }
 
-    SPR_setPosition(angusSprite->sprite,
-                    fix16ToRoundedInt(angusSprite->x),
-                    fix16ToRoundedInt(angusSprite->y));
+    SPR_setPosition(bubbleSprite->sprite,
+                    fix16ToRoundedInt(bubbleSprite->x),
+                    fix16ToRoundedInt(bubbleSprite->y));
 }
 
-void Angus_force(AngusSprite* angusSprite, fix16 x, fix16 y) {
-    angusSprite->velX += x;
-    angusSprite->velY += y;
+void Bubble_force(BubbleSprite* bubbleSprite, fix16 x, fix16 y) {
+    bubbleSprite->velX += x;
+    bubbleSprite->velY += y;
 }
 
 u16 controllerState = 0;
@@ -103,9 +103,9 @@ int main() {
     VDP_setBackgroundColor(32);
 
     setRandomSeed(1);
-    AngusSprite* angusSprites[NUM_SPRITES];
+    BubbleSprite* bubbleSprites[NUM_SPRITES];
     for (int i = 0; i < NUM_SPRITES; i++) {
-        angusSprites[i] = Angus_new(FIX16(VDP_getScreenWidth()/2 - 128 + (random() & 0x00FF)),
+        bubbleSprites[i] = Bubble_new(FIX16(VDP_getScreenWidth()/2 - 128 + (random() & 0x00FF)),
                                     FIX16(VDP_getScreenHeight()/2 - 128 + (random() & 0x00FF)));
 
     }
@@ -124,8 +124,8 @@ int main() {
         if (controllerState & BUTTON_DOWN) forceY += FORCE;
 
         for (int i = 0; i < NUM_SPRITES; i++) {
-            Angus_force(angusSprites[i], forceX, forceY);
-            Angus_update(angusSprites[i]);
+            Bubble_force(bubbleSprites[i], forceX, forceY);
+            Bubble_update(bubbleSprites[i]);
         }
         SPR_update();
         VDP_waitVSync();
