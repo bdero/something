@@ -12,7 +12,7 @@ This demo contains examples of the following:
 - [x] Animated sprites using a rescomp-generated tilemap
 - [x] XGM background music
 - [x] Input
-- [ ] ~~Sound samples~~
+- [x] Sound samples
 
 
 ## Build instructions

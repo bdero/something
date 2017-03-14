@@ -6,6 +6,8 @@
 #define NUM_SPRITES 20
 #define FORCE FIX16(0.2)
 
+u8 soundChannel = 0;
+
 
 typedef struct
 {
@@ -48,20 +50,31 @@ void Angus_update(AngusSprite* angusSprite) {
     fix16 screenRight = FIX16(VDP_getScreenWidth());
     fix16 screenBottom = FIX16(VDP_getScreenHeight());
 
+    s8 bump = FALSE;
     if (angusSprite->x < 0) {
+        bump = TRUE;
         angusSprite->x *= -1;
         angusSprite->velX *= -1;
     } else if (right > screenRight) {
+        bump = TRUE;
         angusSprite->x = screenRight - width - (right - screenRight);
         angusSprite->velX *= -1;
     }
     if (angusSprite->y < 0) {
+        bump = TRUE;
         angusSprite->y *= -1;
         angusSprite->velY *= -1;
     } else if (bottom > screenBottom) {
+        bump = TRUE;
         angusSprite->y = screenBottom - height - (bottom - screenBottom);
         angusSprite->velY *= -1;
     }
+
+    if (bump) {
+        XGM_startPlayPCM(3, 5, soundChannel++);
+        if (soundChannel > 3) soundChannel = 1;
+    }
+
     SPR_setPosition(angusSprite->sprite,
                     fix16ToRoundedInt(angusSprite->x),
                     fix16ToRoundedInt(angusSprite->y));
