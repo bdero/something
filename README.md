@@ -10,9 +10,9 @@ This demo contains examples of the following:
 - [x] Dynamic allocation of structs
 - [x] Rectangle draw of a rescomp-generated tilemap
 - [x] Animated sprites using a rescomp-generated tilemap
+- [x] XGM background music
 - [ ] ~~Input~~
 - [ ] ~~Sound samples~~
-- [ ] ~~XGM background music~~
 
 
 ## Build instructions

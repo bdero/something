@@ -82,6 +82,8 @@ int main() {
                                     FIX16(VDP_getScreenHeight()/2));
 
     }
+
+    XGM_startPlay(BGM_bgm);
     while(1) {
         for (int i = 0; i < 80; i++) {
             Angus_update(angusSprites[i]);
