@@ -11,7 +11,7 @@ This demo contains examples of the following:
 - [x] Rectangle draw of a rescomp-generated tilemap
 - [x] Animated sprites using a rescomp-generated tilemap
 - [x] XGM background music
-- [ ] ~~Input~~
+- [x] Input
 - [ ] ~~Sound samples~~
 
 

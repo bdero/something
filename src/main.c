@@ -3,8 +3,9 @@
 
 #define SPRITE_WIDTH(value) (value.animations[0]->frames[0]->w)
 #define SPRITE_HEIGHT(value) (value.animations[0]->frames[0]->h)
+#define NUM_SPRITES 20
+#define FORCE FIX16(0.2)
 
-const int NUM_SPRITES = 20;
 
 typedef struct
 {
@@ -66,6 +67,17 @@ void Angus_update(AngusSprite* angusSprite) {
                     fix16ToRoundedInt(angusSprite->y));
 }
 
+void Angus_force(AngusSprite* angusSprite, fix16 x, fix16 y) {
+    angusSprite->velX += x;
+    angusSprite->velY += y;
+}
+
+u16 controllerState = 0;
+
+void inputHandler(u16 joy, u16 changed, u16 state) {
+    if (joy == JOY_1) controllerState = state;
+}
+
 int main() {
     VDP_drawText("Hello world!", 10, 13);
     SPR_init(0, 0, 0);
@@ -86,8 +98,20 @@ int main() {
     }
 
     XGM_startPlay(BGM_bgm);
+
+    JOY_init();
+    JOY_setEventHandler(&inputHandler);
+
+    fix16 forceX, forceY;
     while(1) {
+        forceX = forceY = 0;
+        if (controllerState & BUTTON_LEFT) forceX -= FORCE;
+        if (controllerState & BUTTON_RIGHT) forceX += FORCE;
+        if (controllerState & BUTTON_UP) forceY -= FORCE;
+        if (controllerState & BUTTON_DOWN) forceY += FORCE;
+
         for (int i = 0; i < NUM_SPRITES; i++) {
+            Angus_force(angusSprites[i], forceX, forceY);
             Angus_update(angusSprites[i]);
         }
         SPR_update();
