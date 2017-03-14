@@ -5,9 +5,19 @@
 #define SPRITE_HEIGHT(value) (value.animations[0]->frames[0]->h)
 #define NUM_SPRITES 20
 #define FORCE FIX16(0.2)
+#define REGISTER_SOUND(id, sound) (register_sound(id, sound, sizeof(sound)))
+#define SOUND_BANK 0x80
 
-u8 soundChannel = 0;
+u16 soundChannel = 0;
 
+void register_sound(u8 id, const u8 *sound, u32 size) {
+    XGM_setPCM(SOUND_BANK | id, sound, size);
+}
+
+void play_sound(u8 id) {
+    XGM_startPlayPCM(SOUND_BANK | id, 5, soundChannel++);
+    if (soundChannel > 3) soundChannel = 1;
+}
 
 typedef struct
 {
@@ -71,8 +81,7 @@ void Bubble_update(BubbleSprite* bubbleSprite) {
     }
 
     if (bump) {
-        XGM_startPlayPCM(3, 5, soundChannel++);
-        if (soundChannel > 3) soundChannel = 1;
+        play_sound(0);
     }
 
     SPR_setPosition(bubbleSprite->sprite,
@@ -109,6 +118,8 @@ int main() {
                                     FIX16(VDP_getScreenHeight()/2 - 128 + (random() & 0x00FF)));
 
     }
+
+    REGISTER_SOUND(0, SFX_Bump);
 
     XGM_startPlay(BGM_bgm);
 
