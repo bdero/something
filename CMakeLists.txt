@@ -6,7 +6,7 @@ project(something)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES)
+set(SOURCE_FILES src/main.c)
 
 include_directories(inc res /opt/toolchains/gen/m68k-elf/include)
 
