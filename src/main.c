@@ -4,6 +4,8 @@
 #define SPRITE_WIDTH(value) (value.animations[0]->frames[0]->w)
 #define SPRITE_HEIGHT(value) (value.animations[0]->frames[0]->h)
 
+const int NUM_SPRITES = 20;
+
 typedef struct
 {
     Sprite* sprite;
@@ -76,8 +78,8 @@ int main() {
     VDP_setBackgroundColor(32);
 
     setRandomSeed(1);
-    AngusSprite* angusSprites[80];
-    for (int i = 0; i < 80; i++) {
+    AngusSprite* angusSprites[NUM_SPRITES];
+    for (int i = 0; i < NUM_SPRITES; i++) {
         angusSprites[i] = Angus_new(FIX16(VDP_getScreenWidth()/2),
                                     FIX16(VDP_getScreenHeight()/2));
 
@@ -85,11 +87,10 @@ int main() {
 
     XGM_startPlay(BGM_bgm);
     while(1) {
-        for (int i = 0; i < 80; i++) {
+        for (int i = 0; i < NUM_SPRITES; i++) {
             Angus_update(angusSprites[i]);
         }
         SPR_update();
         VDP_waitVSync();
     }
-    return 0;
 }
