@@ -1,6 +1,20 @@
 # something-md
 Simple SEGA Genesis homebrew example.
 
+## Contents
+
+This demo contains examples of the following:
+- [x] A generic Makefile for compilation with gendev (basically just a stripped down version of
+  [cave-story-md's Makefile](https://github.com/andwn/cave-story-md/blob/master/Makefile))
+- [x] A dud `CMakeLists.txt` to make autocomplete work in cmake-based IDEs like CLion
+- [x] Dynamic allocation of structs
+- [x] Rectangle draw of a rescomp-generated tilemap
+- [x] Animated sprites using a rescomp-generated tilemap
+- [ ] ~~Input~~
+- [ ] ~~Sound samples~~
+- [ ] ~~XGM background music~~
+
+
 ## Build instructions
 
 1. Download [andwn's](https://github.com/andwn) latest [gendev build](https://github.com/andwn/gendev/releases),
@@ -16,7 +30,9 @@ Simple SEGA Genesis homebrew example.
 1. Clone this repository and `make` this demo.
 
   ```sh
-  git clone https://github.com/bdero/something-md.git
+  git clone https://github.com/bdero/something-md.git something-md
+  cd something-md
+  make
   ```
 
 1. (Optional, but recommended) Compile and use [BlastEm](https://www.retrodev.com/blastem/) to run the rom.
