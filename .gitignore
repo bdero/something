@@ -4,3 +4,4 @@
 *.elf
 symbol.txt
 res/*.h
+cmake-build-debug/
