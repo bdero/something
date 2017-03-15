@@ -95,9 +95,15 @@ void Bubble_force(BubbleSprite* bubbleSprite, fix16 x, fix16 y) {
 }
 
 u16 controllerState = 0;
+s8 paused = FALSE, newPaused = FALSE;
 
 void inputHandler(u16 joy, u16 changed, u16 state) {
-    if (joy == JOY_1) controllerState = state;
+    if (joy == JOY_1) {
+        controllerState = state;
+        if (state & BUTTON_START) {
+            newPaused = !paused;
+        }
+    }
 }
 
 s16 frame = 0;
@@ -134,23 +140,30 @@ int main() {
 
     fix16 forceX, forceY;
     while(1) {
-        frame += 1;
-
-        forceX = forceY = 0;
-        if (controllerState & BUTTON_LEFT) forceX -= FORCE;
-        if (controllerState & BUTTON_RIGHT) forceX += FORCE;
-        if (controllerState & BUTTON_UP) forceY -= FORCE;
-        if (controllerState & BUTTON_DOWN) forceY += FORCE;
-
-        for (int i = 0; i < NUM_SPRITES; i++) {
-            Bubble_force(bubbleSprites[i], forceX, forceY);
-            Bubble_update(bubbleSprites[i]);
+        if (newPaused != paused) {
+            paused = newPaused;
+            XGM_startPlay(paused ? BGM_pause : BGM_bgm);
         }
 
-        VDP_setHorizontalScroll(PLAN_B, frame*2);
-        VDP_setVerticalScroll(PLAN_B, -frame/2);
+        if (!paused) {
+            frame += 1;
 
-        SPR_update();
+            forceX = forceY = 0;
+            if (controllerState & BUTTON_LEFT) forceX -= FORCE;
+            if (controllerState & BUTTON_RIGHT) forceX += FORCE;
+            if (controllerState & BUTTON_UP) forceY -= FORCE;
+            if (controllerState & BUTTON_DOWN) forceY += FORCE;
+
+            for (int i = 0; i < NUM_SPRITES; i++) {
+                Bubble_force(bubbleSprites[i], forceX, forceY);
+                Bubble_update(bubbleSprites[i]);
+            }
+
+            VDP_setHorizontalScroll(PLAN_B, frame * 2);
+            VDP_setVerticalScroll(PLAN_B, -frame / 2);
+
+            SPR_update();
+        }
         VDP_waitVSync();
     }
 }
